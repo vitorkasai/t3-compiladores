@@ -1,49 +1,63 @@
 package br.ufscar.dc.compiladores.lasemantico;
 
 import java.io.PrintWriter;
+
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.Parser;
-import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
-import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Token;
 
-/**
- *
- * @author vinij
- */
+import java.util.BitSet;
+
+
 public class MyCustomErrorListener implements ANTLRErrorListener {
-    
     PrintWriter pw;
+
+    static boolean isErrorFound = false;
+
     public MyCustomErrorListener(PrintWriter pw) {
-       this.pw = pw;    
+        this.pw = pw;
     }
 
     @Override
-    public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
-        String tokenText = ((Token) offendingSymbol).getText();
-        if (tokenText.equals("<EOF>")) {
-            tokenText = "EOF";
+    public void syntaxError(Recognizer<?, ?> arg0, Object arg1, int arg2, int arg3, String arg4, RecognitionException arg5) {
+
+        Token t = (Token) arg1;
+        String text = t.getText();
+        text = (text.equals("<EOF>")) ? "EOF" : text;
+
+        String aType = LALexer.VOCABULARY.getDisplayName(t.getType());
+        if (!isErrorFound) {
+            MyCustomErrorListener.isErrorFound = true;
+
+            if (aType == "Nao_Fechado") {
+                pw.println("Linha " + t.getLine() + ": " + "comentario nao fechado");
+            } else if (aType == "Literal_Nao_Fechada") {
+                pw.println("Linha " + t.getLine() + ": " + "cadeia literal nao fechada");
+            } else if (aType == "ERR") {
+                pw.println("Linha " + t.getLine() + ": " + text + " - simbolo nao identificado");
+            } else {
+                pw.println("Linha " + arg2 + ": erro sintatico proximo a " + text);
+            }
         }
-        pw.printf("Linha %d: erro sintatico proximo a %s%n", line, tokenText);
-        pw.println("Fim da compilacao");
-        pw.flush();
-        System.exit(1);
+
+
     }
 
     @Override
-    public void reportAmbiguity(Parser parser, DFA dfa, int i, int i1, boolean bln, java.util.BitSet bitset, ATNConfigSet atncs) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void reportAmbiguity(Parser recognizer, DFA dfa, int startIndex, int stopIndex, boolean exact, BitSet ambigAlts, ATNConfigSet configs) {
     }
 
     @Override
-    public void reportAttemptingFullContext(Parser parser, DFA dfa, int i, int i1, java.util.BitSet bitset, ATNConfigSet atncs) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void reportAttemptingFullContext(Parser recognizer, DFA dfa, int startIndex, int stopIndex, BitSet conflictingAlts, ATNConfigSet configs) {
+
     }
 
     @Override
-    public void reportContextSensitivity(Parser parser, DFA dfa, int i, int i1, int i2, ATNConfigSet atncs) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void reportContextSensitivity(Parser recognizer, DFA dfa, int startIndex, int stopIndex, int prediction, ATNConfigSet configs) {
+
     }
 }

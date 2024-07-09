@@ -35,6 +35,24 @@ public interface LAVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDeclaracao_local(LAParser.Declaracao_localContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link LAParser#declaracao_constante}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDeclaracao_constante(LAParser.Declaracao_constanteContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link LAParser#declaracao_tipo}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDeclaracao_tipo(LAParser.Declaracao_tipoContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link LAParser#declaracao_variavel}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDeclaracao_variavel(LAParser.Declaracao_variavelContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link LAParser#variavel}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

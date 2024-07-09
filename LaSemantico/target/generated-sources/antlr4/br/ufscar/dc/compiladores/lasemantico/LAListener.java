@@ -48,6 +48,36 @@ public interface LAListener extends ParseTreeListener {
 	 */
 	void exitDeclaracao_local(LAParser.Declaracao_localContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link LAParser#declaracao_constante}.
+	 * @param ctx the parse tree
+	 */
+	void enterDeclaracao_constante(LAParser.Declaracao_constanteContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link LAParser#declaracao_constante}.
+	 * @param ctx the parse tree
+	 */
+	void exitDeclaracao_constante(LAParser.Declaracao_constanteContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link LAParser#declaracao_tipo}.
+	 * @param ctx the parse tree
+	 */
+	void enterDeclaracao_tipo(LAParser.Declaracao_tipoContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link LAParser#declaracao_tipo}.
+	 * @param ctx the parse tree
+	 */
+	void exitDeclaracao_tipo(LAParser.Declaracao_tipoContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link LAParser#declaracao_variavel}.
+	 * @param ctx the parse tree
+	 */
+	void enterDeclaracao_variavel(LAParser.Declaracao_variavelContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link LAParser#declaracao_variavel}.
+	 * @param ctx the parse tree
+	 */
+	void exitDeclaracao_variavel(LAParser.Declaracao_variavelContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link LAParser#variavel}.
 	 * @param ctx the parse tree
 	 */

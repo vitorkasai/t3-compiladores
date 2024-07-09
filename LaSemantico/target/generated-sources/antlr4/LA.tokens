@@ -66,7 +66,6 @@ FECHACOL=65
 COMENTARIO=66
 COMENTARIO_NAO_FECHADO=67
 WS=68
-ERRO=69
 '. .'=1
 'algoritmo'=2
 'fim_algoritmo'=3

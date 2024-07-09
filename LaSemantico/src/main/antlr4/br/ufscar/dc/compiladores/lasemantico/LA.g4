@@ -1,7 +1,4 @@
 grammar LA;
-
-//ANALISE LEXICA
-
 // Algoritmo
 ALGORITMO: 'algoritmo';
 FIM_ALGORITMO: 'fim_algoritmo';
@@ -84,6 +81,9 @@ IDENT: ('a'..'z'|'A'..'Z')('a'..'z'|'A'..'Z'|'0'..'9'|'_')*;
 CADEIA: '"' ('\\"' | ~('"' | '\\' | '\n'))* '"';
 CADEIA_NAO_FECHADA: '"' ('\\"' | ~('"' | '\\' | '\n'))* '\n';
 
+fragment
+ESC_SEQ	: '\\\'';
+
 // Simbolos
 PONTO: '.';
 INTERVALO: '..';
@@ -101,14 +101,17 @@ COMENTARIO_NAO_FECHADO: '{' ~('}')* '\n';
 // White-spaces
 WS: (' ' | '\t' | '\r' | '\n') -> skip;
 
-// Cadeia que não caiu em nenhuma classificação ("Coringa")
-ERRO: .;
-
 //ANALISE SINTATICA (PARSER)
-programa: declaracoes 'algoritmo' corpo 'fim_algoritmo';
-declaracoes: decl_local_global*;
+
+programa: declaracoes 'algoritmo' corpo 'fim_algoritmo' EOF;
+declaracoes: (decl_local_global)*;
 decl_local_global: declaracao_local | declaracao_global;
-declaracao_local: 'declare' variavel | 'constante' IDENT ':' tipo_basico '=' valor_constante | 'tipo' IDENT ':' tipo;
+declaracao_local: declaracao_variavel |
+                declaracao_constante |
+                declaracao_tipo;
+declaracao_constante: 'constante' IDENT ':' tipo_basico '=' valor_constante;
+declaracao_tipo: 'tipo' IDENT ':' tipo;
+declaracao_variavel: 'declare' variavel;
 variavel: identificador (',' identificador)* ':' tipo;
 identificador: IDENT ( '.' IDENT)* dimensao;
 dimensao: ('[' exp_aritmetica ']')*;
