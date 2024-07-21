@@ -9,6 +9,8 @@ public class LaSemantico extends LABaseVisitor {
 
     @Override
     public Object visitDeclaracao_constante(LAParser.Declaracao_constanteContext ctx) {
+        // Ao passar pela declaração de constante, vamos verificar se ela já existe no escopo atual, mostrar
+        // erro caso já exista ou apenas adicionar no escopo caso contrário
         TabelaDeSimbolos escopoAtual = escopos.obterEscopoAtual();
         if (escopoAtual.existe(ctx.IDENT().getText())) {
             LaSemanticoUtils.adicionarErroSemantico(ctx.start, "constante " + ctx.IDENT().getText() + " ja declarado anteriormente");
@@ -35,6 +37,8 @@ public class LaSemantico extends LABaseVisitor {
 
     @Override
     public Object visitDeclaracao_tipo(LAParser.Declaracao_tipoContext ctx) {
+        // Estamos passando por todas as declarações de tipo, se já existir no escopo atual um tipo com mesmo nome
+        // do que estamos passando, então vamos mostrar erro. Se não existir ainda, então adicionamos no escopo atual.
         TabelaDeSimbolos escopoAtual = escopos.obterEscopoAtual();
         if (escopoAtual.existe(ctx.IDENT().getText())) {
             LaSemanticoUtils.adicionarErroSemantico(ctx.start, "tipo " + ctx.IDENT().getText() + " declarado duas vezes num mesmo escopo");
@@ -47,6 +51,8 @@ public class LaSemantico extends LABaseVisitor {
     @Override
     public Object visitDeclaracao_variavel(LAParser.Declaracao_variavelContext ctx) {
         TabelaDeSimbolos escopoAtual = escopos.obterEscopoAtual();
+        // Quando estamos passando pela declaração de variável, podemos ter mais do que uma sendo definida ao mesmo tempo
+        // Portanto, precisamos percorrer todas e verificar se elas já existem no escopo atual
         for (LAParser.IdentificadorContext id : ctx.variavel().identificador()) {
             if (escopoAtual.existe(id.getText())) {
                 LaSemanticoUtils.adicionarErroSemantico(id.start, "identificador " + id.getText() + " ja declarado anteriormente");
@@ -72,6 +78,7 @@ public class LaSemantico extends LABaseVisitor {
 
     @Override
     public Object visitDeclaracao_global(LAParser.Declaracao_globalContext ctx) {
+        // Passa pela declaração global, temos casos de procedimento ou função
         TabelaDeSimbolos escopoAtual = escopos.obterEscopoAtual();
         if (escopoAtual.existe(ctx.IDENT().getText())) {
             LaSemanticoUtils.adicionarErroSemantico(ctx.start, ctx.IDENT().getText() + " ja declarado anteriormente");
@@ -83,6 +90,8 @@ public class LaSemantico extends LABaseVisitor {
 
     @Override
     public Object visitTipo_basico_ident(LAParser.Tipo_basico_identContext ctx) {
+        // Percorre todos os escopos aninhados e verifica se o tipo existe em algum deles. 
+        // caso não exista, então estamos tentando utilizar um tipo não declarado e vamos mostrar erro
         if (ctx.IDENT() != null) {
             for (TabelaDeSimbolos escopo : escopos.percorrerEscoposAninhados()) {
                 if (!escopo.existe(ctx.IDENT().getText())) {
@@ -95,6 +104,8 @@ public class LaSemantico extends LABaseVisitor {
 
     @Override
     public Object visitIdentificador(LAParser.IdentificadorContext ctx) {
+        // Pegamos o identificador na primeira posição e verificamos se já existe em algum dos escopos
+        // Se não existir, então estamos tentando usar um identificador não declarado, vamos mostrar erro
         for (TabelaDeSimbolos escopo : escopos.percorrerEscoposAninhados()) {
             if (!escopo.existe(ctx.IDENT(0).getText())) {
                 LaSemanticoUtils.adicionarErroSemantico(ctx.start, "identificador " + ctx.IDENT(0).getText() + " nao declarado");

@@ -11,6 +11,7 @@ public class Escopos {
 
     private LinkedList<TabelaDeSimbolos> pilhaDeTabelas;
 
+    // Construtor para o escopo e definição da pilha utilizando uma linkedList
     public Escopos() {
         pilhaDeTabelas = new LinkedList<>();
         criarNovoEscopo();
@@ -20,6 +21,7 @@ public class Escopos {
         pilhaDeTabelas.push(new TabelaDeSimbolos());
     }
 
+    // Apenas verifica qual é o escopo sem precisar remover ele da pilha
     public TabelaDeSimbolos obterEscopoAtual() {
         return pilhaDeTabelas.peek();
     }

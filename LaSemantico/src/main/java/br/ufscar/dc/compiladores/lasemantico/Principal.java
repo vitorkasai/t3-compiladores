@@ -16,7 +16,9 @@ public class Principal {
             LAParser parser = new LAParser(cs);
             LAParser.ProgramaContext arvore = parser.programa();
             LaSemantico as = new LaSemantico();
+            // Visita o programa e vai identificando os erros internamente
             as.visitPrograma(arvore);
+            // Envia para arquivo os erros encontrados
             for (String error : LaSemanticoUtils.errosSemanticos) {
                 pw.println(error);
             }
