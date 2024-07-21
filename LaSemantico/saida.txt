@@ -1,3 +1,2 @@
-Linha 7: tipo inteir nao declarado
-Linha 11: identificador idades nao declarado
+Linha 21: atribuicao nao compativel para classificacao
 Fim da compilacao
